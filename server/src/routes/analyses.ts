@@ -1,8 +1,10 @@
-import { Router, type Request, type Response } from "express";
+import { Router, type NextFunction, type Request, type Response } from "express";
 import multer from "multer";
 import { z } from "zod";
 import { config } from "../config.js";
-import { validateFile, type DocumentKind } from "../validation/fileValidation.js";
+import type { LLMProvider } from "../llm/types.js";
+import type { AnalysisRepository } from "../repository/types.js";
+import { runAnalysis } from "../services/runAnalysis.js";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -17,41 +19,56 @@ const promptSchema = z.object({
     .max(2000, "Prompt must be at most 2000 characters"),
 });
 
-interface FileReport {
-  filename: string;
-  sizeBytes: number;
-  status: "accepted" | "unsupported" | "invalid";
-  kind?: DocumentKind;
-  reason?: string;
-}
+const idSchema = z.string().regex(/^[\w-]{1,64}$/);
 
-export const analysesRouter = Router();
+export function createAnalysesRouter(deps: { repo: AnalysisRepository; provider: LLMProvider }): Router {
+  const router = Router();
 
-analysesRouter.post("/", upload.array("files"), (req: Request, res: Response) => {
-  const parsedPrompt = promptSchema.safeParse(req.body);
-  if (!parsedPrompt.success) {
-    res.status(400).json({ error: parsedPrompt.error.issues[0]?.message ?? "Invalid prompt" });
-    return;
-  }
+  router.post("/", upload.array("files"), async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const parsedPrompt = promptSchema.safeParse(req.body);
+      if (!parsedPrompt.success) {
+        res.status(400).json({ error: parsedPrompt.error.issues[0]?.message ?? "Invalid prompt" });
+        return;
+      }
+      const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+      if (files.length === 0) {
+        res.status(400).json({ error: "At least one file is required" });
+        return;
+      }
 
-  const files = (req.files as Express.Multer.File[] | undefined) ?? [];
-  if (files.length === 0) {
-    res.status(400).json({ error: "At least one file is required" });
-    return;
-  }
-
-  const reports: FileReport[] = files.map((file) => {
-    const result = validateFile(file);
-    return result.ok
-      ? { filename: result.safeName, sizeBytes: file.size, status: "accepted", kind: result.kind }
-      : { filename: result.safeName, sizeBytes: file.size, status: result.status, reason: result.reason };
+      const outcome = await runAnalysis(deps, parsedPrompt.data.prompt, files);
+      if (outcome.ok) {
+        res.status(201).json(outcome.response);
+      } else {
+        res.status(outcome.httpStatus).json({
+          error: outcome.error,
+          analysisId: outcome.analysisId,
+          documents: outcome.documents,
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
   });
 
-  const accepted = reports.filter((r) => r.status === "accepted").length;
-  if (accepted === 0) {
-    res.status(422).json({ error: "No valid documents were uploaded", files: reports });
-    return;
-  }
+  router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = req.params["id"] ?? "";
+      if (!idSchema.safeParse(id).success) {
+        res.status(400).json({ error: "Invalid analysis id" });
+        return;
+      }
+      const analysis = await deps.repo.getAnalysis(id);
+      if (!analysis) {
+        res.status(404).json({ error: "Analysis not found" });
+        return;
+      }
+      res.json(analysis);
+    } catch (err) {
+      next(err);
+    }
+  });
 
-  res.json({ prompt: parsedPrompt.data.prompt, files: reports });
-});
+  return router;
+}
