@@ -1,5 +1,9 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
+
+// Load the repo-root .env regardless of the workspace's working directory.
+dotenv.config({ path: fileURLToPath(new URL("../../.env", import.meta.url)) });
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(4000),
