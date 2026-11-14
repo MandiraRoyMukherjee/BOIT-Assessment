@@ -16,14 +16,27 @@ export interface Chunk {
   text: string;
 }
 
-/** Pointer back to the exact place in an uploaded document that supports a finding. */
+/** Pointer back to the exact place in an uploaded document that a finding relies on. */
 export interface Source {
   documentId: string;
   filename: string;
+  /** "supports": the document states it. "absent": the document lacks it (missing-information findings). */
+  role: "supports" | "absent";
   ref?: string;
   quote?: string;
-  /** True when the quote was found verbatim in the document text. */
+  /** True when the quote was found verbatim in the document text by the server. */
   verified: boolean;
+}
+
+/** A fact extracted from one document, with a server-verified quote and location. */
+export interface Fact {
+  id: string;
+  documentId: string;
+  filename: string;
+  label: string;
+  value: string;
+  ref: string;
+  quote: string;
 }
 
 export interface Finding {
