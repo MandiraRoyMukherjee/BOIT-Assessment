@@ -86785,7 +86785,8 @@ async function runAnalysis(deps, prompt, files) {
 // src/routes/analyses.ts
 var upload = (0, import_multer2.default)({
   storage: import_multer2.default.memoryStorage(),
-  limits: { fileSize: config.MAX_FILE_MB * 1024 * 1024, files: config.MAX_FILES }
+  // multer requires an integer byte count; MAX_FILE_MB may be fractional (e.g. 0.8).
+  limits: { fileSize: Math.floor(config.MAX_FILE_MB * 1024 * 1024), files: config.MAX_FILES }
 });
 var promptSchema = external_exports.object({
   prompt: external_exports.string({ required_error: "Prompt is required" }).trim().min(1, "Prompt is required").max(2e3, "Prompt must be at most 2000 characters")

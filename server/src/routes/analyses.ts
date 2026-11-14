@@ -8,7 +8,8 @@ import { runAnalysis } from "../services/runAnalysis.js";
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: config.MAX_FILE_MB * 1024 * 1024, files: config.MAX_FILES },
+  // multer requires an integer byte count; MAX_FILE_MB may be fractional (e.g. 0.8).
+  limits: { fileSize: Math.floor(config.MAX_FILE_MB * 1024 * 1024), files: config.MAX_FILES },
 });
 
 const promptSchema = z.object({
