@@ -14,6 +14,7 @@ const envSchema = z.object({
   LLM_MODEL: z.string().default("gpt-4o-mini"),
   LLM_BASE_URL: z.string().default("https://api.openai.com/v1"),
   LLM_TIMEOUT_MS: z.coerce.number().default(30000),
+  RATE_LIMIT_PER_MIN: z.coerce.number().default(10),
   MAX_FILE_MB: z.coerce.number().default(2),
   MAX_FILES: z.coerce.number().default(5),
 });
