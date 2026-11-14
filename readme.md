@@ -73,6 +73,32 @@ See [`.env.example`](.env.example). Key ones:
 | `RATE_LIMIT_PER_MIN` | Analysis requests per IP per minute | `10` |
 | `CLIENT_ORIGIN` | Allowed CORS origin | `http://localhost:5173` |
 
+## Deploy to Vercel
+
+The static client and the API are served from one Vercel project. [`vercel.json`](vercel.json) builds the client (`client/dist`), declares the serverless function and rewrites `/api/*` to it. The function is [`api/index.mjs`](api), a single-file bundle of the Express app created by `npm run build:api` (esbuild, from [`server/src/vercel.ts`](server/src/vercel.ts)).
+
+The bundle is **committed on purpose**, because Vercel finds functions in the repository before the build step runs. After changing anything under `server/`, run `npm run build:api` and commit `api/index.mjs`.
+
+1. Push the repo to GitHub.
+2. In Vercel: **Add New → Project**, import the repository, and leave the framework preset as "Other". `vercel.json` supplies the build settings.
+3. Add these environment variables (Settings → Environment Variables):
+
+   | Variable | Value |
+   |---|---|
+   | `DATABASE_URL` | Hosted Postgres URL, for example Neon (`...?sslmode=require`) |
+   | `LLM_PROVIDER` | `openai` (or `mock` to run without a key) |
+   | `LLM_API_KEY` | Your provider key |
+   | `LLM_MODEL`, `LLM_BASE_URL` | For Groq: `openai/gpt-oss-120b`, `https://api.groq.com/openai/v1` |
+   | `LLM_TIMEOUT_MS` | `18000` (keeps the overall request deadline of 3 × this value under the function limit) |
+   | `MAX_FILE_MB`, `MAX_FILES` | `0.8`, `4` (Vercel rejects request bodies over about 4.5 MB) |
+   | `CLIENT_ORIGIN` | Your deployment URL, for example `https://your-project.vercel.app` |
+
+4. Create the tables once from your machine, with `DATABASE_URL` in `.env` pointing at the hosted database: `npm run db:seed -w server`.
+5. Deploy, then open the URL and re-run the sanity checks with the files from `samples/`.
+
+Notes: `vercel.json` sets `maxDuration` to 60 seconds. The maximum allowed depends on your Vercel plan, and an analysis of the four sample files took 11 to 22 seconds against Groq. The bundle was tested locally by loading it the way a serverless runtime does, but it has not been verified on Vercel itself.
+
+
 ## Sample documents
 
 [`samples/`](samples) holds four fully synthetic documents (fictional company, people and numbers) with deliberately planted differences:

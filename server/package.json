@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
+    "build:api": "node build-api.mjs",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:init": "tsx src/scripts/initDb.ts",
@@ -33,6 +34,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
+    "esbuild": "^0.28.2",
     "supertest": "^7.3.2",
     "tsx": "^4.16.0",
     "typescript": "^5.5.0",
