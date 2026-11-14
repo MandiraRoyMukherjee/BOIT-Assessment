@@ -1,0 +1,7 @@
+SYNTHETIC SAMPLE - NOT REAL DATA
+Annual Accounts Summary (year ended 2025-12-31)
+Company name: Northwind Trade Limited
+Registration number: NW-7782341
+Annual revenue: GBP 1,980,000
+Net profit: GBP 212,400
+Total liabilities: GBP 640,000

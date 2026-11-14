@@ -12,7 +12,9 @@ export const pdfParser: DocumentParser = {
       const pdf = await getDocumentProxy(new Uint8Array(buffer));
       const extracted = await extractText(pdf, { mergePages: false });
       pages = extracted.text;
-    } catch {
+    } catch (cause) {
+      // Logged for operators only; the client gets a generic message.
+      console.error("PDF parse failed:", cause);
       throw new ParseError("PDF could not be read (corrupt, encrypted or malformed).");
     }
 

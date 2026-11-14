@@ -1,0 +1,10 @@
+SYNTHETIC SAMPLE - NOT REAL DATA
+Business Licence Application Form
+Company name: Northwind Trading Ltd
+Registration number: NW-7782341
+Registered address: 14 Harbour Road, Portsmouth, PO1 2AB
+Director: Alicia Moreno
+Licence number: GL-20418
+Annual revenue: GBP 2,450,000
+Application date: 2026-01-15
+Business activity: Import and wholesale of kitchenware

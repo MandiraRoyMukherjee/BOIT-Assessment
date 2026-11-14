@@ -75,8 +75,10 @@ export class MockProvider implements LLMProvider {
         });
       }
 
+      // Missing information is reported only for attributes at least half of the documents carry;
+      // attributes unique to one of many documents (e.g. "Net profit") are normal, not gaps.
       const absent = input.documents.filter((d) => !byDoc.has(d.ref));
-      if (input.documents.length >= 2 && absent.length > 0) {
+      if (input.documents.length >= 2 && absent.length > 0 && byDoc.size * 2 >= input.documents.length) {
         missing.push({
           type: "missing_info",
           label: `${first.label} not found in all documents`,

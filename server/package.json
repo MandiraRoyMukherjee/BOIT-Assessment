@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:init": "tsx src/scripts/initDb.ts",
     "db:seed": "tsx src/scripts/initDb.ts --seed",
+    "samples": "tsx src/scripts/generateSamples.ts",
     "test": "vitest run"
   },
   "dependencies": {
