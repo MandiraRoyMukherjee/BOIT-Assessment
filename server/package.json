@@ -16,9 +16,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.7.4",
     "helmet": "^7.1.0",
     "multer": "^2.5.0",
+    "papaparse": "^5.7.1",
     "pg": "^8.23.1",
+    "unpdf": "^1.7.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -26,7 +29,10 @@
     "@types/express": "^4.17.21",
     "@types/multer": "^2.3.0",
     "@types/node": "^20.14.0",
+    "@types/papaparse": "^5.5.2",
     "@types/pg": "^8.23.1",
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.3.2",
     "tsx": "^4.16.0",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"

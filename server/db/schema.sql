@@ -20,9 +20,16 @@ CREATE TABLE IF NOT EXISTS documents (
                   CHECK (status IN ('processed', 'unsupported', 'unreadable', 'invalid')),
   error           TEXT,
   extracted_text  TEXT,
+  -- location-tagged chunks: [{ "ref": "page 2", "text": "..." }]; this is what provenance points into
+  chunks          JSONB NOT NULL DEFAULT '[]'::jsonb,
   chunk_count     INTEGER NOT NULL DEFAULT 0,
+  truncated       BOOLEAN NOT NULL DEFAULT false,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Idempotent upgrades for databases created before these columns existed.
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS chunks JSONB NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS truncated BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS findings (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),

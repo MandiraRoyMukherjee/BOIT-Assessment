@@ -1,6 +1,7 @@
 import path from "node:path";
+import type { DocumentKind } from "../domain/types.js";
 
-export type DocumentKind = "pdf" | "text" | "csv";
+export type { DocumentKind };
 export type RejectionStatus = "unsupported" | "invalid";
 
 export type ValidationResult =
