@@ -2,6 +2,8 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { config } from "./config.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { analysesRouter } from "./routes/analyses.js";
 
 export function createApp(): express.Express {
   const app = express();
@@ -12,6 +14,8 @@ export function createApp(): express.Express {
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
   });
+  app.use("/api/analyses", analysesRouter);
 
+  app.use(errorHandler);
   return app;
 }
