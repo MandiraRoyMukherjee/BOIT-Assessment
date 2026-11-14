@@ -109,7 +109,7 @@ See [`.env.example`](.env.example). Key ones:
 
 - **No OCR.** Scanned or image-only PDFs, and image files, are reported as unreadable.
 - **The mock provider is not an LLM.** It extracts `Label: value` lines and compares by label. It ignores the instruction text and misses free-form prose. Use `LLM_PROVIDER=openai` for real analysis.
-- **The OpenAI provider was tested only against a stubbed `fetch`** (retry, schema validation, error mapping), not against a live API.
+- **LLM verification is limited.** The OpenAI-compatible provider is covered by unit tests with a stubbed `fetch` (retry, schema validation, error mapping) and was run once end to end against Groq (`openai/gpt-oss-120b`) on the sample documents, where it found all four planted discrepancies. It has not been evaluated across models or on messy real-world documents.
 - Synchronous processing: the request stays open while the LLM runs.
 - The rate limiter keeps counters in memory, so on a multi-instance or serverless deployment limits are per instance.
 - No authentication or per-user data separation. An analysis id works as an unguessable link.
@@ -140,6 +140,8 @@ See [`.env.example`](.env.example). Key ones:
 - CI pipeline (typecheck, tests, dependency audit), infrastructure as code, and per-environment config.
 
 ## AI development tools used and my decisions
+
+I used chatgpt for documentation and coding with the help of ibm bob.
 
 > **To complete before submitting.** Be specific and honest here.
 
