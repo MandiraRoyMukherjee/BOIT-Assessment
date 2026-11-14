@@ -1,0 +1,65 @@
+For the second technical screening assignment, please share the below brief with the candidate.
+*The candidate should complete the exercise during a monitored 60-minute session. They may use Claude Code, Codex, GitHub Copilot, or similar AI engineering tools. The objective is to assess whether they can independently build a functional full-stack AI application from a concise requirement.*
+*Project* : Multi-Document Intelligence Workbench
+Build a full-stack application where a user can upload multiple documents, provide an analysis instruction, and receive a structured comparison or consolidated set of insights derived from those documents.
+*Example instructions:*
+* Compare the information across all uploaded documents.
+* Identify inconsistencies between the application form and supporting documents.
+* Extract key dates, obligations, financial values, and missing information.
+* Compare the financial position of the companies represented in the documents.
+* Highlight discrepancies in names, addresses, licence details, or revenue figures.
+*Mandatory technology:*
+* React
+* Node.js
+* TypeScript for both frontend and backend
+* Any relational database, such as PostgreSQL, MySQL, SQLite, or Microsoft SQL Server
+* Any document-processing, PDF-parsing, or OCR library
+* Any LLM provider or mocked AI implementation
+*Functional requirements:*
+The application should:
+* Allow the user to upload multiple documents.
+* Support at least two document formats, such as PDF, text, CSV, or image.
+* Extract or ingest the content from each document.
+* Accept a user-defined prompt describing the required analysis.
+* Analyse the documents independently and collectively.
+Present the results as one or more of the following:
+* Structured comparison table
+* Consolidated summary
+* List of discrepancies
+* Missing-information report
+* Key-value extraction
+* Clearly indicate which document supports each finding.
+* Allow the user to copy the generated output.
+* Handle unsupported, unreadable, or invalid documents gracefully.
+The candidate should create or use their own synthetic documents. No real customer or banking data should be used.
+Engineering expectations
+The implementation should demonstrate:
+* Strong TypeScript usage
+* Clear frontend and backend separation
+* Modular document-processing pipeline
+* Structured AI output
+* Preservation of document provenance
+* Input and file validation
+* Secure file handling
+* Appropriate error handling
+* Sensible handling of large document content
+* Clear distinction between extracted facts and AI-generated interpretation
+The candidate should not simply merge all documents into one unstructured prompt. The solution should retain document boundaries and make the source of each finding traceable.
+*Submission:*
+At the end of the session, the candidate must provide access to the repository containing:
+* Complete source code
+* Setup instructions
+* .env.example
+* Sample synthetic documents
+* Database schema or seed script, where applicable
+A brief README covering:
+* Architecture
+* Assumptions
+* Completed functionality
+* Known limitations
+* Security considerations
+* How the solution would be productionised
+* At least one meaningful automated test
+* Clear commit history
+The candidate should also disclose which AI development tools were used and briefly explain which architectural and implementation decisions were made personally.
+*Please ensure the candidate shares their screen throughout the exercise and creates the repository at the beginning of the session.*
